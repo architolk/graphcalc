@@ -23,9 +23,9 @@
   <input type="range" id="volume-control" min="0" max="1" step="0.05" value="0.1"><br>
 
   <label for="vibrato-amount-control">Vibrato Amount</label><br>
-  <input type="range" id="vibrato-amount-control" max="10" min="0" value="5" step="0.5"><br>
+  <input type="range" id="vibrato-amount-control" max="5000" min="0" value="3000" step="100"><br>
   <label for="vibrato-speed-control">Vibrato Speed</label><br>
-  <input type="range" id="vibrato-speed-control" max="30" min="1" value="10" step="2"><br>
+  <input type="range" id="vibrato-speed-control" max="880" min="110" value="220" step="110"><br>
 
   <input type="radio" id="sin-wave" name="waveform" value="sine" checked>
   <label for="sin-wave">Sin Wave</label><br>
@@ -37,32 +37,6 @@
   <label for="sawtooth">Sawtooth Wave</label>
   <p>Source: <a href="https://medium.com/geekculture/building-a-modular-synth-with-web-audio-api-and-javascript-d38ccdeca9ea">Building a modular synth with web audio API and javascript</a></p>
 </body>
-<script language="JavaScript">
-var ctx = new AudioContext || webkitAudioContext();
-var out = ctx.destination;
-
-// Instantiating
-var E = ctx.createOscillator(); // Modulator
-var F = ctx.createOscillator(); // Carrier
-
-// Setting frequencies
-E.frequency.value = 440;
-F.frequency.value = 440;
-
-// Modulation depth
-var E_gain = ctx.createGain();
-E_gain.gain.value = 6000;
-
-// Wiring everything up
-E.connect(E_gain);
-E_gain.connect(F.frequency);
-F.connect(out);
-
-// Start making sound
-E.start();
-F.start();
-</script>
-<!--
 <script language="JavaScript">
   var AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -78,15 +52,15 @@ F.start();
   const vibratoAmountControl = document.querySelector('#vibrato-amount-control');
   const vibratoSpeedControl = document.querySelector('#vibrato-speed-control');
 
-  let vibratoAmount = 5
-  let vibratoSpeed = 10
+  let vibratoAmount = 3000
+  let vibratoSpeed = 220
 
   vibratoAmountControl.addEventListener('input', function(){
   	vibratoAmount = this.value
   });
 
   vibratoSpeedControl.addEventListener('input', function(){
-  	vibratoSpeed = 100*this.value
+  	vibratoSpeed = this.value
   });
 
   volumeControl.addEventListener('input', changeVolume);
@@ -112,14 +86,14 @@ F.start();
     const lfo = context.createOscillator();
     const lfoGain = context.createGain();
 
-    lfo.frequency.setValueAtTime(880, 0);
+    lfo.frequency.setValueAtTime(220, 0);
     lfo.connect(lfoGain);
     lfo.start(0);
 
-    lfoGain.gain.setValueAtTime(500, 0)
+    lfoGain.gain.setValueAtTime(vibratoAmount, 0)
     lfoGain.connect(oscillator.frequency)
 
-    oscillator.frequency.setValueAtTime(220, 0);
+    oscillator.frequency.setValueAtTime(vibratoSpeed, 0);
     oscillator.connect(masterVolume);
     oscillator.start(0);
     oscillator.type = waveform;
@@ -137,5 +111,4 @@ F.start();
   	});
   });
 </script>
--->
 </html>
